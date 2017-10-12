@@ -29,18 +29,6 @@
                 "description": "Password for the Administrator account of the existing Active Directory Domain"
             }
         },
-        "storageAccountType": {
-            "type": "string",
-            "allowedValues": [
-                "Standard_LRS",
-                "Standard_GRS",
-                "Standard_RAGRS",
-                "Premium_LRS"
-            ],
-            "metadata": {
-                "description": "Type of new Storage Accounts (Standard_LRS, Standard_GRS, Standard_RAGRS or Premium_LRS) to be created to store VM disks"
-            }
-        },
         "nicSubnetUri": {
             "type": "string",
             "metadata": {
@@ -51,6 +39,12 @@
             "type": "string",
             "metadata": {
                 "description": "Size of the S2D VMs to be created"
+            }
+        },
+        "enableAcceleratedNetworking": {
+            "type": "bool",
+            "metadata": {
+                "description": "Enable (true) or Disable (false) Accelerated Networking - if enabling, make sure you are selecting appropriate VM Size and Region"
             }
         },
         "vmCount": {
@@ -114,7 +108,6 @@
     },
     "variables": {
         "apiVersionStorage": "2016-01-01",
-        "storageNamePrefix": "[concat(parameters('namePrefix'),uniqueString(resourceGroup().id),'vm')]",
         "witnessStorageName": "[concat(parameters('namePrefix'),uniqueString(resourceGroup().id),'cw')]",
         "witnessStorageType": "Standard_LRS",
         "vmNamePrefix": "[concat(parameters('namePrefix'),'-s2d-')]",
@@ -132,7 +125,11 @@
             "name": "[variables('vmAvailabilitySetName')]",
             "apiVersion": "2015-06-15",
             "location": "[resourceGroup().location]",
-            "properties": {}
+            "properties": {
+                "platformFaultDomainCount": 2,
+                "platformUpdateDomainCount": 2,
+                "managed": "true"
+            }
         },
         {
             "type": "Microsoft.Storage/storageAccounts",
@@ -145,24 +142,10 @@
             "kind": "Storage"
         },
         {
-            "type": "Microsoft.Storage/storageAccounts",
-            "name": "[concat(variables('storageNamePrefix'),copyindex())]",
-            "apiVersion": "2016-01-01",
-            "copy": {
-                "name": "storageAccountLoop",
-                "count": "[parameters('vmCount')]"
-            },
-            "location": "[resourceGroup().location]",
-            "sku": {
-                "name": "[parameters('storageAccountType')]"
-            },
-            "kind": "Storage"
-        },
-        {
             "name": "[concat(variables('vmNamePrefix'), copyindex(), '-nic')]",
             "type": "Microsoft.Network/networkInterfaces",
             "location": "[resourceGroup().location]",
-            "apiVersion": "2015-06-15",
+            "apiVersion": "2016-09-01",
             "copy": {
                 "name": "nicLoop",
                 "count": "[parameters('vmCount')]"
@@ -178,7 +161,8 @@
                             }
                         }
                     }
-                ]
+                ],
+                "enableAcceleratedNetworking": "[parameters('enableAcceleratedNetworking')]"
             }
         },
         {
@@ -190,7 +174,6 @@
             },
             "name": "[concat(variables('vmNamePrefix'),copyindex(),'-newVM')]",
             "dependsOn": [
-                "storageAccountLoop",
                 "nicLoop",
                 "[resourceId('Microsoft.Compute/availabilitySets', variables('vmAvailabilitySetName'))]"
             ],
@@ -202,9 +185,6 @@
                 "parameters": {
                     "vmName": {
                         "value": "[concat(variables('vmNamePrefix'), copyindex())]"
-                    },
-                    "storageAccountUri": {
-                        "value": "[reference(concat('Microsoft.Storage/storageAccounts/',variables('StorageNamePrefix'),copyIndex()),variables('apiVersionStorage')).primaryEndpoints.blob]"
                     },
                     "vmAvailabilitySetName": {
                         "value": "[variables('vmAvailabilitySetName')]"
@@ -307,7 +287,6 @@
                         "vmCount": "[parameters('vmCount')]",
                         "vmDiskSize": "[parameters('vmDiskSize')]",
                         "witnessStorageName": "[variables('witnessStorageName')]",
-                        "witnessStorageEndpoint": "[replace(split(reference(concat('Microsoft.Storage/storageAccounts/', variables('witnessStorageName'))).primaryEndpoints.blob, 'blob.')[1], '/', '')]",
                         "witnessStorageKey": {
                             "userName": "PLACEHOLDER-DO-NOT-USE",
                             "password": "PrivateSettingsRef:witnessStorageKey"

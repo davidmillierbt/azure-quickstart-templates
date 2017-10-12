@@ -5,9 +5,6 @@
         "vmName": {
             "type": "string"
         },
-        "storageAccountUri": {
-            "type": "string"
-        },
         "vmAvailabilitySetName": {
             "type": "string"
         },
@@ -68,9 +65,6 @@
                     "diskCaching": {
                         "value": "None"
                     },
-                    "storageAccountUri": {
-                        "value": "[parameters('storageAccountUri')]"
-                    },
                     "diskNamingPrefix": {
                         "value": "[concat(parameters('vmName'), '-data')]"
                     }
@@ -105,10 +99,7 @@
                         "version": "[parameters('imageVersion')]"
                     },
                     "osDisk": {
-                        "name": "osdisk",
-                        "vhd": {
-                            "uri": "[concat(parameters('storageAccountUri'), 'vhds/',parameters('vmName'),'-osdisk.vhd')]"
-                        },
+                        "name": "[concat(parameters('vmName'),'-osdisk')]",
                         "caching": "ReadWrite",
                         "createOption": "FromImage"
                     },
