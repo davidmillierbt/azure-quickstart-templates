@@ -73,7 +73,7 @@
         },
         {
             "type": "Microsoft.Compute/virtualMachines",
-            "apiVersion": "2015-06-15",
+            "apiVersion": "2016-04-30-preview",
             "location": "[resourceGroup().location]",
             "name": "[parameters('vmName')]",
             "dependsOn": [
@@ -101,7 +101,10 @@
                     "osDisk": {
                         "name": "[concat(parameters('vmName'),'-osdisk')]",
                         "caching": "ReadWrite",
-                        "createOption": "FromImage"
+                        "createOption": "fromImage",
+						"managedDisk": {
+                            "storageAccountType": "Standard_LRS"
+                        }
                     },
                     "dataDisks": "[reference(concat(parameters('vmName'),'-diskSelection')).outputs.dataDiskArray.value]"
                 },
