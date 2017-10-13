@@ -131,7 +131,7 @@
     },
     "variables": {
         "apiVersionStorage": "2016-01-01",
-        "witnessStorageName": "[concat(parameters('namePrefix'),'s2dwitness')]",
+        "witnessStorageName": "[concat(parameters('namePrefix'),'s2dwitness',uniqueString(resourceGroup().id))]",
         "witnessStorageType": "Standard_LRS",
         "vmNamePrefix": "[concat(parameters('namePrefix'),'-')]",
         "vmAvailabilitySetName": "[concat(variables('vmNamePrefix'),'as')]",
@@ -322,15 +322,15 @@
                             "userName": "PLACEHOLDER-DO-NOT-USE",
                             "password": "PrivateSettingsRef:witnessStorageKey"
                         },
-                        "adminCreds": {
-                            "userName": "[parameters('adminUsername')]",
-                            "password": "PrivateSettingsRef:adminPassword"
+                        "daCreds": {
+                            "userName": "[parameters('daUsername')]",
+                            "password": "PrivateSettingsRef:daPassword"
                         }
                     }
                 },
                 "protectedSettings": {
                     "items": {
-                        "adminPassword": "[parameters('adminPassword')]",
+                        "daPassword": "[parameters('daPassword')]",
                         "witnessStorageKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts',variables('witnessStorageName')),variables('apiVersionStorage')).keys[0].value]"
                     }
                 }
