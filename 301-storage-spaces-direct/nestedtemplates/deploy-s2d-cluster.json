@@ -281,7 +281,7 @@
                     "configurationFunction": "[variables('s2dPrepFunction')]",
                     "properties": {
                         "domainName": "[parameters('domainName')]",
-                        "joinCreds": {
+                        "daCreds": {
                             "userName": "[parameters('daUsername')]",
                             "password": "PrivateSettingsRef:daPassword"
                         }
