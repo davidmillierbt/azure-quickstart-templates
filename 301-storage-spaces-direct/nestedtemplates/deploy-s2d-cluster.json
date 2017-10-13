@@ -148,6 +148,10 @@
             "name": "[variables('vmAvailabilitySetName')]",
             "apiVersion": "2017-03-30",
             "location": "[resourceGroup().location]",
+            "properties": {
+                 "platformFaultDomainCount": 3,
+                 "platformUpdateDomainCount": 5
+             },			
 			"sku": {
 				"name": "Aligned"
 			}
