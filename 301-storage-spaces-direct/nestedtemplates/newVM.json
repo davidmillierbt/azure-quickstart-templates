@@ -18,8 +18,14 @@
             "type": "int"
         },
 		"vmDiskType": {
-		  "type": "string",
+		  "type": "string"
 		},		
+		"daUsername": {
+		  "type": "string"
+		},
+		"daPassword": {
+		  "type": "securestring"
+		},
         "adminUsername": {
             "type": "string"
         },
