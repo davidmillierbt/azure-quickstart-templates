@@ -8,6 +8,12 @@
     "existingDomainName": {
       "value": "contoso.com"
     },
+	"daUsername": {
+	  "value": "AzureAdmin"
+	},
+	"daPassword": {
+	  "value": "GEN-PASSWORD"
+	},	
     "adminUsername": {
       "value": "AzureAdmin"
     },
