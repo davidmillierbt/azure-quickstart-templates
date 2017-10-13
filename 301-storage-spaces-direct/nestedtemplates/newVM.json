@@ -17,6 +17,9 @@
         "vmDiskSize": {
             "type": "int"
         },
+		"vmDiskType": {
+		  "type": "string",
+		},		
         "adminUsername": {
             "type": "string"
         },
@@ -62,6 +65,9 @@
                     "vmDiskSize": {
                         "value": "[parameters('vmDiskSize')]"
                     },
+					"vmDiskType": {
+						"value": "[parameters('vmDiskType')]"
+					},					
                     "diskCaching": {
                         "value": "None"
                     },
@@ -73,7 +79,7 @@
         },
         {
             "type": "Microsoft.Compute/virtualMachines",
-            "apiVersion": "2016-04-30-preview",
+            "apiVersion": "2017-03-30",
             "location": "[resourceGroup().location]",
             "name": "[parameters('vmName')]",
             "dependsOn": [

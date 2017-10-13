@@ -3,10 +3,9 @@ This template will create a Storage Spaces Direct (S2D) Scale-Out File Server (S
 
 This template creates the following resources by default:
 
-+	A Premium Storage Account for storing VM disks for each storage node
-+   A Standard Storage Account for a Cloud Witness
++   Managed Disks for OS and Data 
 +	A Windows Server 2016 cluster for storage nodes, provisioned for Storage Spaces Direct (S2D) and the Scale-Out File Server (SOFS) role
-+	One Availability Set for the cluster nodes
++	A Managed Availability Set for the cluster nodes
 
 To deploy the required Azure VNET and Active Directory infrastructure, if not already in place, you may use <a href="https://github.com/Azure/azure-quickstart-templates/tree/master/active-directory-new-domain-ha-2-dc">this template</a> to deploy the prerequisite infrastructure. 
 
